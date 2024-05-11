@@ -1,138 +1,175 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MiDrawerMendoza());
+import 'package:mendoza/pantalla1.dart';
+import 'package:mendoza/pantalla2.dart';
+import 'package:mendoza/drawer_header.dart';
+import 'package:mendoza/pantalla3.dart';
+import 'package:mendoza/pantalla4.dart';
+import 'package:mendoza/pantalla5.dart';
 
-class MiDrawerMendoza extends StatefulWidget {
-  const MiDrawerMendoza({Key? key}) : super(key: key);
-
-  @override
-  State<MiDrawerMendoza> createState() => _MiDrawerMendozaState();
+void main() {
+  runApp(MyApp());
 }
 
-class _MiDrawerMendozaState extends State<MiDrawerMendoza> {
-  TextEditingController nombreController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController numeroController = TextEditingController();
-  TextEditingController ubiController = TextEditingController();
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            "Spotify",
-            style: TextStyle(
-              fontSize: 25,
+      home: HomePage(),
+    );
+  }
+}
+//s9s9s9s  rrrrrrr
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  var currentPage = DrawerSections.dashboard;
+
+  @override
+  Widget build(BuildContext context) {
+    var container;
+    if (currentPage == DrawerSections.dashboard) {
+    } else if (currentPage == DrawerSections.contacts) {
+      container = const Pantalla1();
+    } else if (currentPage == DrawerSections.events) {
+      container = const Pantalla2();
+    } else if (currentPage == DrawerSections.notes) {
+      container = const Pantalla3();
+    } else if (currentPage == DrawerSections.settings) {
+      container = const Pantalla4();
+    } else if (currentPage == DrawerSections.notifications) {
+      container = const Pantalla5();
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "Spotify",
+          style: TextStyle(
+            fontSize: 25,
+          ),
+        ),
+        flexibleSpace: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [
+          Color(0xff28f321),
+          Color(0xff1e5ee9),
+        ]))),
+
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(Icons.more_vert),
+            onPressed: () {},
+          ),
+        ], //Actions
+      ),
+      body: container,
+      drawer: Drawer(
+        child: SingleChildScrollView(
+          child: Container(
+            child: Column(
+              children: [
+                MyHeaderDrawer(),
+                MyDrawerList(),
+              ],
             ),
           ),
-          flexibleSpace: Container(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-            Color(0xff28f321),
-            Color(0xff1e5ee9),
-          ]))),
-
-          centerTitle: true,
-          actions: [
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.more_vert),
-              onPressed: () {},
-            ),
-          ], //Actions
         ),
-        drawer: Drawer(
-          child: ListView(
-            shrinkWrap: true,
+      ),
+    );
+  }
+
+  Widget MyDrawerList() {
+    return Container(
+      padding: EdgeInsets.only(
+        top: 15,
+      ),
+      child: Column(
+        children: [
+          menuItem(2, "Usuarios", Icons.person,
+              currentPage == DrawerSections.contacts ? true : false),
+          menuItem(3, "Canciones", Icons.disc_full,
+              currentPage == DrawerSections.events ? true : false),
+          menuItem(4, "Albums", Icons.library_music,
+              currentPage == DrawerSections.notes ? true : false),
+          Divider(),
+          menuItem(5, "Artistas", Icons.mic_external_on,
+              currentPage == DrawerSections.settings ? true : false),
+          menuItem(6, "Lista de reproduccion", Icons.queue_music,
+              currentPage == DrawerSections.notifications ? true : false),
+        ],
+      ),
+    );
+  }
+
+  Widget menuItem(int id, String title, IconData icon, bool selected) {
+    return Material(
+      color: selected ? Colors.grey[300] : Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          Navigator.pop(context);
+          setState(() {
+            if (id == 1) {
+              currentPage = DrawerSections.dashboard;
+            } else if (id == 2) {
+              currentPage = DrawerSections.contacts;
+            } else if (id == 3) {
+              currentPage = DrawerSections.events;
+            } else if (id == 4) {
+              currentPage = DrawerSections.notes;
+            } else if (id == 5) {
+              currentPage = DrawerSections.settings;
+            } else if (id == 6) {
+              currentPage = DrawerSections.notifications;
+            }
+          });
+        },
+        child: Padding(
+          padding: EdgeInsets.all(15.0),
+          child: Row(
             children: [
-              DrawerHeader(
-                margin: EdgeInsets.zero,
-                padding: EdgeInsets.zero,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: AssetImage('assets/spotify.jpg'))),
-                child: const Stack(),
-              ),
-              const Text(
-                "Registrarte",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20),
-              ),
-              const Text("Nombre"),
-              const SizedBox(
-                height: 5,
-              ),
-              TextField(
-                controller: nombreController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "Ingresa el nombre"),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text("Email"),
-              const SizedBox(
-                height: 5,
-              ),
-              TextField(
-                controller: emailController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Ingrea el email",
+              Expanded(
+                child: Icon(
+                  icon,
+                  size: 20,
+                  color: Colors.black,
                 ),
               ),
-              const Text("Numero"),
-              const SizedBox(
-                height: 5,
-              ),
-              TextField(
-                controller: numeroController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "Ingresa tu numero"),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text("Ubicacion"),
-              const SizedBox(
-                height: 5,
-              ),
-              TextField(
-                controller: ubiController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Ingrea tu pais",
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.indigoAccent,
-                    minimumSize: Size(16, 60)),
-                onPressed: () {
-                  print(nombreController.text);
-                  print(emailController.text);
-                  print(numeroController.text);
-                  print(ubiController.text);
-                },
+              Expanded(
+                flex: 3,
                 child: Text(
-                  "Registrar",
-                  style: TextStyle(fontSize: 30, color: Colors.white),
+                  title,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                  ),
                 ),
-              )
+              ),
             ],
           ),
         ),
       ),
     );
   }
+}
+
+enum DrawerSections {
+  dashboard,
+  contacts,
+  events,
+  notes,
+  settings,
+  notifications,
 }
